@@ -387,6 +387,10 @@
     </div>
     <div class="role-item">
       <input type="checkbox" checked> 
+      <span class="role-badge badge-non-valide">⬤ 🚓 Conduite - Non Validée</span>
+    </div>
+    <div class="role-item">
+      <input type="checkbox" checked> 
       <span class="role-badge badge-non-valide">⬤ 📻 Formation Radio Non Validée</span>
     </div>
     <div class="role-item">
@@ -520,8 +524,7 @@ data.forEach((block, blockIndex) => {
       };
       buttonsDiv.appendChild(halfBtn);
 
-      const fullBtn = document.createElement("button");
-      fullBtn.innerText = "+1";
+      const fullBtn = document.createElement("button"); FullBtn.innerText = "+1";
       fullBtn.onclick = () => {
         clearSelection(buttonsDiv);
         fullBtn.classList.add("selected-pt");
