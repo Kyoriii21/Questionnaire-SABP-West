@@ -146,6 +146,18 @@
       width: 80px;
     }
 
+    .dispo-note {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #c0392b;
+      background: #fdf2e9;
+      border: 1px dashed #e67e22;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      text-align: center;
+    }
+
     /* ---- QUESTIONNAIRE ---- */
     .question-block { 
       display: flex;
@@ -227,7 +239,7 @@
       margin-top: 20px;
       font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
-    
+     
     .role-category {
       color: #949ba4;
       font-size: 12px;
@@ -238,7 +250,7 @@
       border-bottom: 1px solid #3f4147;
       padding-bottom: 3px;
     }
-    
+     
     .role-item {
       display: flex;
       align-items: center;
@@ -305,7 +317,7 @@
   
   <div class="header-main">
     <img src="favicon.png" alt="SABP Logo" class="header-logo" onerror="this.style.display='none'">
-    <h1>Fiche de Recrutement S.A.B.P. Ouest</h1>
+    <h1>Fiche de Recruitment S.A.B.P. Ouest</h1>
   </div>
 
   <div class="intro-box">
@@ -366,6 +378,9 @@
         <tbody id="dispo-body">
         </tbody>
       </table>
+      <div class="dispo-note">
+        ⚠️ Attention : Veillez à bien préciser si le candidat peut effectuer ses 12 heures de service par semaine.
+      </div>
     </div>
   </div>
 
@@ -600,7 +615,7 @@ function updateTotalPercentage() {
     scoreValueDiv.innerText = `${percentage}% (${currentTotal} / ${totalPointsPossible} Pts)`;
     scoreValueDiv.style.background = "var(--main-yellow)";
     scoreValueDiv.style.color = "#000";
-     
+       
     if (currentTotal >= 10) {
       scoreStatusText.innerHTML = "Résultat global : <span style='color:var(--success-green); font-weight:bold;'>Candidature Validée (≥ 10 Pts)</span>";
     } else {
