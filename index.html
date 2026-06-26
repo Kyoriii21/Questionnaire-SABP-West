@@ -447,8 +447,8 @@ jours.forEach(jour => {
   dispoBody.appendChild(tr);
 });
 
-// Base de données des questions (Total = 20 points)
-  const Data = [
+// Ton tableau de données d'origine avec tes deux chapitres
+const quizData = [
   {
     section: "Chapitre 2 : Partie Théorique",
     questions: [
@@ -474,6 +474,98 @@ jours.forEach(jour => {
     ]
   }
 ];
+
+// --- FONCTION DE GÉNÉRATION DYNAMIQUE DE L'AFFICHAGE (À intégrer dans ton script principal) ---
+function generateQuizHTML() {
+  const container = document.getElementById('quiz-container'); // Assure-toi d'avoir une div avec cet ID dans ton HTML
+  container.innerHTML = '';
+  
+  let globalQuestionIndex = 0;
+
+  quizData.forEach((chapter) => {
+    // Création du titre de la section
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.innerText = chapter.section;
+    container.appendChild(sectionTitle);
+
+    chapter.questions.forEach((question) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.backgroundColor = '#1a1a1e';
+      card.style.border = '1px solid #2b2b32';
+      card.style.borderRadius = '8px';
+      card.style.padding = '22px';
+      card.style.marginBottom = '20px';
+
+      // Texte de la question
+      const qText = document.createElement('p');
+      qText.style.fontWeight = 'bold';
+      qText.style.color = '#ffffff';
+      qText.innerHTML = `<strong>Question :</strong> ${question.q}`;
+      card.appendChild(qText);
+
+      // Bloc Réponse attendue / Note de correction
+      const noteBox = document.createElement('div');
+      noteBox.className = 'scenario-box';
+      noteBox.style.backgroundColor = '#141416';
+      noteBox.style.borderLeft = question.hasEliminatory ? '3px solid #ef4444' : '3px solid #3b82f6';
+      noteBox.style.padding = '15px';
+      noteBox.style.margin = '15px 0';
+      noteBox.style.borderRadius = '0 6px 6px 0';
+      noteBox.innerHTML = `<strong>Réponse attendue :</strong> <span style="color: #a8a8b3;">${question.note}</span>`;
+      card.appendChild(noteBox);
+
+      // --- ZONE CORRIGÉE : NOUVELLE LIGNE POUR LES BOUTONS DYNAMIQUES ---
+      const buttonsRow = document.createElement('div');
+      buttonsRow.className = 'points-row';
+      // Style flex avec width 100% pour imposer le retour à la ligne complet en bas du bloc
+      buttonsRow.style.cssText = "display: flex; gap: 8px; justify-content: flex-end; width: 100%; margin-top: 15px; border-top: 1px dashed #2b2b32; padding-top: 12px;";
+
+      // 1. Bouton 0 (Actif par défaut)
+      buttonsRow.innerHTML += `<button type="button" class="btn-score active" data-index="${globalQuestionIndex}" data-value="0" style="background-color: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="selectScore(this, 0)">0</button>`;
+
+      // 2. Si la question vaut 1 point max, on ajoute l'option intermédiaire de demi-point (+0.5)
+      if (question.max === 1) {
+        buttonsRow.innerHTML += `<button type="button" class="btn-score" data-index="${globalQuestionIndex}" data-value="0.5" style="background-color: #141416; color: #e1e1e6; border: 1px solid #2b2b32; padding: 6px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="selectScore(this, 0.5)">+0.5</button>`;
+      }
+
+      // 3. Boucle automatique qui s'adapte aux questions (crée +1, +2, +3 selon le max indiqué dans l'objet)
+      for (let score = 1; score <= question.max; score++) {
+        buttonsRow.innerHTML += `<button type="button" class="btn-score" data-index="${globalQuestionIndex}" data-value="${score}" style="background-color: #141416; color: #e1e1e6; border: 1px solid #2b2b32; padding: 6px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;" onclick="selectScore(this, ${score})">+${score}</button>`;
+      }
+
+      card.appendChild(buttonsRow);
+      container.appendChild(card);
+      
+      globalQuestionIndex++;
+    });
+  });
+}
+
+// Fonction de gestion du clic visuel sur les boutons
+function selectScore(buttonElement, scoreValue) {
+  // Désactive les autres boutons de la même ligne
+  const parent = buttonElement.parentElement;
+  const buttons = parent.querySelectorAll('.btn-score');
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    btn.style.backgroundColor = '#141416';
+    btn.style.color = '#e1e1e6';
+    btn.style.border = '1px solid #2b2b32';
+  });
+
+  // Active le bouton cliqué avec une couleur verte de validation
+  buttonElement.classList.add('active');
+  buttonElement.style.backgroundColor = '#10b981';
+  buttonElement.style.color = '#ffffff';
+  buttonElement.style.border = 'none';
+
+  // Logique additionnelle : tu peux lier ici ta variable de sauvegarde de score globale
+  console.log(`Question Index: ${buttonElement.getAttribute('data-index')} | Score attribué : ${scoreValue}`);
+}
+
+// Lancement automatique au chargement de la page
+window.onload = generateQuizHTML;
 
 const container = document.getElementById("form");
 const userScores = {};
