@@ -527,8 +527,8 @@ data.forEach((block, blockIndex) => {
     };
     buttonsDiv.appendChild(zeroBtn);
 
-    // Boucle de génération automatique de paliers (par pas de 0.5) jusqu'au max de la question
-    for (let val = 0.5; val <= item.max; val += 0.5) {
+    // Boucle de génération automatique modifiée : incrémentation par +1 uniquement (pas de nombres à virgule)
+    for (let val = 1; val <= item.max; val++) {
       const btn = document.createElement("button");
       btn.innerText = `+${val}`;
       btn.onclick = () => {
@@ -601,4 +601,4 @@ function updateTotalPercentage() {
 </script>
 
 </body>
-</html> 
+</html>
