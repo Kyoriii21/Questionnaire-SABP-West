@@ -456,9 +456,9 @@ const data = [
     section: "Chapitre 2 : Partie Théorique",
     questions: [
       { q: "Connaissez-vous la signification de l’acronyme : SABP ?", note: "San Andreas Border Patrol (1pt)", max: 1 },
-      { q: "Quelles sont les missions du SABP ? :", note: "1. Assurer la sûreté ainsi que la sécurité des frontières<br>2. Réguler les trafics illégaux et l’immigration clandestine<br>3. Aider les autres polices dans leurs opérations (3pt)", max: 3 },
+      { q: "Quelles sont les missions du SABP ? :", note: "1. Assurer la sûreté ainsi que la sécurité des frontières<br>2. Réguler les trafics illégaux et l’immigration clandestine<br>3. Aider les autres polices dans leurs opérations (3pt)", max: 3, strictIntegers: true },
       { q: "Selon vous, quelle est la meilleure arme du SABP ?", note: "La communication / la parole (1pt)", max: 1 },
-      { q: "Quelles sont les missions d’un patrouilleur ? :", note: "1. Le fait d’apprendre<br>2. Suivre les ordres donnés par les supérieurs<br>3. Observer afin de prétendre à une évolution (3pt)", max: 3 },
+      { q: "Quelles sont les missions d’un patrouilleur ? :", note: "1. Le fait d’apprendre<br>2. Suivre les ordres donnés par les supérieurs<br>3. Observer afin de prétendre à une évolution (3pt)", max: 3, strictIntegers: true },
       { q: "Quelles sont les différences entre le S.A.B.P vs B.C.S.O/LSPD ? :", note: "1. Le droit d'agir dans tout Los Santos (si l'infraction part des frontières)<br>2. Statut et responsabilités d'une agence fédérale (2pt)", max: 2 },
       { q: "Contrôle de civils désagréables/longue attente : Saurez-vous faire preuve d'un mental d'acier ?", note: "Réponse claire attendue sur son mental et sa patience (1pt)", max: 1 },
       { q: "Quelle est votre expérience professionnelle dans les métiers des forces de l'ordre ou fédérales ?", note: "Au moins 1 métier similaire (Valider si le candidat s'y connaît très bien globalement) (1pt)", max: 1 },
@@ -527,17 +527,33 @@ data.forEach((block, blockIndex) => {
     };
     buttonsDiv.appendChild(zeroBtn);
 
-    // Boucle de génération automatique modifiée : incrémentation par +1 uniquement (pas de nombres à virgule)
-    for (let val = 1; val <= item.max; val++) {
-      const btn = document.createElement("button");
-      btn.innerText = `+${val}`;
-      btn.onclick = () => {
-        clearSelection(buttonsDiv);
-        btn.classList.add("selected-pt");
-        userScores[qKey] = val;
-        updateTotalPercentage();
-      };
-      buttonsDiv.appendChild(btn);
+    // LOGIQUE SPÉCIFIQUE : 
+    // Si strictIntegers est vrai (Missions SABP et Patrouilleur), on avance de 1 en 1 (+1, +2, +3)
+    if (item.strictIntegers) {
+      for (let val = 1; val <= item.max; val++) {
+        const btn = document.createElement("button");
+        btn.innerText = `+${val}`;
+        btn.onclick = () => {
+          clearSelection(buttonsDiv);
+          btn.classList.add("selected-pt");
+          userScores[qKey] = val;
+          updateTotalPercentage();
+        };
+        buttonsDiv.appendChild(btn);
+      }
+    } else {
+      // Pour TOUTES les autres questions, on laisse les paliers avec demi-points (+0.5, +1, +1.5, etc.)
+      for (let val = 0.5; val <= item.max; val += 0.5) {
+        const btn = document.createElement("button");
+        btn.innerText = `+${val}`;
+        btn.onclick = () => {
+          clearSelection(buttonsDiv);
+          btn.classList.add("selected-pt");
+          userScores[qKey] = val;
+          updateTotalPercentage();
+        };
+        buttonsDiv.appendChild(btn);
+      }
     }
 
     // Gestion du bouton éliminatoire
